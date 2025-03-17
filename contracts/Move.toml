@@ -1,0 +1,17 @@
+[package]
+name = "compensate"
+version = "1.0.0"
+authors = []
+
+[addresses]
+compensate = "0xa7be87dd0114c9c72b037dded157eabd9d76a827ed6ecd54ec68112005abeb5d"
+
+[dev-addresses]
+compensate = "0xa7be87dd0114c9c72b037dded157eabd9d76a827ed6ecd54ec68112005abeb5d"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
