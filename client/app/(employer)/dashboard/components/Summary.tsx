@@ -5,21 +5,71 @@ import {
   LineChart,
   MoveUpRight,
 } from "lucide-react";
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { TreasuryFormRef } from "./TreasuryForm";
 
 interface SummaryProps {
   network?: string;
   token?: string;
   amount?: string;
+  treasuryFormRef?: React.RefObject<TreasuryFormRef | null>;
 }
 
-function Summary({ network, token, amount }: SummaryProps) {
+function Summary({ network, token, amount, treasuryFormRef }: SummaryProps) {
+  const [isFunding, setIsFunding] = useState(false);
+  const [formIsFunding, setFormIsFunding] = useState(false);
+  const hasStartedFunding = useRef(false);
+
   // Default values for display if not provided
   const displayNetwork = network || "Aptos testnet";
   const displayToken = token || "-";
   const displayAmount = amount || "-";
   // Always use Linear flow
   const displayFlow = "linear";
+
+  // Track external funding state from TreasuryForm
+  useEffect(() => {
+    const checkFormLoadingState = () => {
+      const isFormLoading = !!treasuryFormRef?.current?.isFunding;
+      setFormIsFunding(isFormLoading);
+
+      // If we started funding but form is no longer loading, reset our local state too
+      if (hasStartedFunding.current && !isFormLoading) {
+        setIsFunding(false);
+        hasStartedFunding.current = false;
+      }
+    };
+
+    // Check immediately
+    checkFormLoadingState();
+
+    // Set up polling to check for changes in the form's loading state
+    const intervalId = setInterval(checkFormLoadingState, 100);
+
+    return () => clearInterval(intervalId);
+  }, [treasuryFormRef]);
+
+  const handleFundTreasury = async () => {
+    if (!treasuryFormRef?.current) {
+      console.error("Treasury form reference not available");
+      return;
+    }
+
+    try {
+      setIsFunding(true);
+      hasStartedFunding.current = true;
+      const result = await treasuryFormRef.current.fundTreasuryFromSummary();
+      console.log("Treasury funding result:", result);
+    } catch (error) {
+      console.error("Error funding treasury from summary:", error);
+    } finally {
+      // Local state will be reset by the useEffect when it detects form is no longer loading
+      // This ensures we stay in sync with the actual form state
+    }
+  };
+
+  // Determine if button should show loading state
+  const isLoading = isFunding || formIsFunding;
 
   return (
     <div className="flex flex-col h-full p-6">
@@ -89,10 +139,21 @@ function Summary({ network, token, amount }: SummaryProps) {
       </div>
 
       <button
-        className={`mt-auto w-full flex flex-row justify-center gap-2 text-white bg-gradient-to-r from-purple-bg-dark2 to-purple-primary p-3 rounded-lg font-semibold text-base hover:opacity-90 transition-all duration-200 shadow-sm`}
+        onClick={handleFundTreasury}
+        disabled={isLoading}
+        className={`mt-auto w-full flex flex-row justify-center gap-2 text-white bg-gradient-to-r from-purple-bg-dark2 to-purple-primary p-3 rounded-lg font-semibold text-base hover:opacity-90 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed`}
       >
-        <Landmark className="h-5 w-5" />
-        Fund Treasury
+        {isLoading ? (
+          <>
+            <span className="animate-spin">⟳</span>
+            Funding...
+          </>
+        ) : (
+          <>
+            <Landmark className="h-5 w-5" />
+            Fund Treasury
+          </>
+        )}
       </button>
     </div>
   );

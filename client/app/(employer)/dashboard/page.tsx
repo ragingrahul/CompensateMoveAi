@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { TreasuryForm } from "./components/TreasuryForm";
+import React, { useState, useCallback, useRef } from "react";
+import { TreasuryForm, TreasuryFormRef } from "./components/TreasuryForm";
 import Summary from "./components/Summary";
 import OrgTitle from "./components/OrgTitle";
 import TreasuryBalance from "./components/TreasuryBalance";
 import EmployeeCount from "./components/EmployeeCount";
+import TreasuryRecipients from "./components/TreasuryRecipients";
 
 function Page() {
+  // Create a ref for the TreasuryForm component
+  const treasuryFormRef = useRef<TreasuryFormRef>(null);
+
   // State to store the form values from TreasuryForm
   const [formValues, setFormValues] = useState({
     network: "aptos_testnet",
@@ -55,15 +59,20 @@ function Page() {
 
       <div className="grid gap-6 grid-cols-1 h-full lg:grid-cols-3">
         <div className="rounded-xl shadow-md bg-white/80 backdrop-blur-sm border border-purple-border-secondary lg:col-span-2 h-full transition-all duration-300 hover:shadow-lg hover:bg-white/90">
-          <TreasuryForm onUpdate={handleFormUpdate} />
+          <TreasuryForm ref={treasuryFormRef} onUpdate={handleFormUpdate} />
         </div>
         <div className="rounded-xl shadow-md bg-white/80 backdrop-blur-sm border border-purple-border-secondary h-full transition-all duration-300 hover:shadow-lg hover:bg-white/90">
           <Summary
             network={formValues.network}
             token={formValues.token}
             amount={formValues.amount}
+            treasuryFormRef={treasuryFormRef}
           />
         </div>
+      </div>
+
+      <div className="rounded-xl shadow-md bg-white/80 backdrop-blur-sm border border-purple-border-secondary transition-all duration-300 hover:shadow-lg hover:bg-white/90">
+        <TreasuryRecipients />
       </div>
     </div>
   );
