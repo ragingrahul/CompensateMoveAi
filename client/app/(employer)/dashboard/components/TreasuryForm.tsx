@@ -63,6 +63,7 @@ import { useTokenStream } from "@/hooks/useTokenStream";
 import { useAptosWallet } from "@/lib/wallet-adapter/useAptosWallet";
 import { MODULE_OWNER_ADDRESS, MODULE_NAME } from "@/lib/contract-utils";
 import { AptosClient } from "aptos";
+import { useEmployees } from "@/hooks/useEmployees";
 
 // Token options
 const tokens = [
@@ -150,6 +151,8 @@ export const TreasuryForm = forwardRef<TreasuryFormRef, TreasuryFormProps>(
     const { createTreasury, fundTreasury, isLoading, addRecipient } =
       useTokenStream();
     const { walletAddress, isConnected } = useAptosWallet();
+    const { employees } = useEmployees();
+    const [selectedEmployee, setSelectedEmployee] = useState<string>("");
 
     const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
@@ -891,52 +894,101 @@ export const TreasuryForm = forwardRef<TreasuryFormRef, TreasuryFormProps>(
                   <div className="space-y-4 border border-purple-border-secondary rounded-lg p-4">
                     <h3 className="text-purple-bg-dark font-medium flex items-center">
                       <Users className="h-4 w-4 mr-2 text-purple-primary" />
-                      Add Individual Recipient
+                      Select Employee as Recipient
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-purple-bg-dark">
-                          Recipient Address
+                          Select Employee
                         </label>
-                        <Input
-                          id="recipientAddress"
-                          placeholder="0x123...abc"
-                          className="border-purple-border-secondary"
-                        />
+                        <select
+                          id="employeeSelect"
+                          className="w-full rounded-md border border-purple-border-secondary bg-white p-2"
+                          value={selectedEmployee}
+                          onChange={(e) => {
+                            setSelectedEmployee(e.target.value);
+                            // Find the selected employee
+                            const employee = employees.find(
+                              (emp) => emp.aptosWalletAddress === e.target.value
+                            );
+                            // If employee is found, set the payment amount to their salary
+                            if (employee) {
+                              // Set payment amount field to employee's salary
+                              const paymentAmountInput =
+                                document.getElementById(
+                                  "paymentAmount"
+                                ) as HTMLInputElement;
+                              if (paymentAmountInput) {
+                                paymentAmountInput.value =
+                                  employee.salary.toString();
+                              }
+                            }
+                          }}
+                        >
+                          <option value="">Select an employee</option>
+                          {employees.map((employee) => (
+                            <option
+                              key={employee.id}
+                              value={employee.aptosWalletAddress}
+                            >
+                              {employee.name} ({employee.email})
+                            </option>
+                          ))}
+                        </select>
                         <p className="text-xs text-purple-bg-dark3">
-                          Enter the wallet address of the recipient
+                          Select an employee to add to treasury recipients
                         </p>
                       </div>
 
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-purple-bg-dark">
-                          Payment Amount
+                          Payment Amount (from salary)
                         </label>
-                        <Input
-                          id="paymentAmount"
-                          placeholder="1000"
-                          type="number"
-                          className="border-purple-border-secondary"
-                        />
+                        <div className="flex">
+                          <div
+                            id="paymentAmountDisplay"
+                            className="w-full p-2 border border-purple-border-secondary rounded-md bg-gray-50 text-gray-700"
+                          >
+                            {selectedEmployee
+                              ? employees.find(
+                                  (emp) =>
+                                    emp.aptosWalletAddress === selectedEmployee
+                                )?.salary || "-"
+                              : "Will display employee&apos;s salary"}
+                          </div>
+                        </div>
                         <p className="text-xs text-purple-bg-dark3">
-                          Amount of tokens per payment
+                          This amount is automatically set from the
+                          employee&apos;s salary
                         </p>
                       </div>
 
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-purple-bg-dark">
-                          Payment Frequency (seconds)
+                          Payment Frequency
                         </label>
-                        <Input
-                          id="paymentFrequency"
-                          placeholder="86400"
-                          type="number"
-                          className="border-purple-border-secondary"
-                        />
+                        <div className="flex gap-2">
+                          <Input
+                            id="paymentFrequencyValue"
+                            placeholder="1"
+                            type="number"
+                            min="1"
+                            defaultValue="1"
+                            className="border-purple-border-secondary w-1/3"
+                          />
+                          <select
+                            id="paymentFrequencyUnit"
+                            className="w-2/3 rounded-md border border-purple-border-secondary bg-white p-2"
+                            defaultValue="day"
+                          >
+                            <option value="day">Day(s)</option>
+                            <option value="week">Week(s)</option>
+                            <option value="month">Month(s)</option>
+                          </select>
+                        </div>
                         <p className="text-xs text-purple-bg-dark3">
-                          Time between payments in seconds (e.g., 86400 for
-                          daily)
+                          How often payments should be made to this employee
                         </p>
                       </div>
 
@@ -944,81 +996,119 @@ export const TreasuryForm = forwardRef<TreasuryFormRef, TreasuryFormProps>(
                         <Button
                           type="button"
                           className="bg-purple-primary hover:bg-purple-primary/90 text-white w-full"
-                          onClick={() => {
-                            const recipientAddress = (
-                              document.getElementById(
-                                "recipientAddress"
-                              ) as HTMLInputElement
-                            )?.value;
-                            const paymentAmount = (
-                              document.getElementById(
-                                "paymentAmount"
-                              ) as HTMLInputElement
-                            )?.value;
-                            const paymentFrequency = (
-                              document.getElementById(
-                                "paymentFrequency"
-                              ) as HTMLInputElement
-                            )?.value;
-
-                            if (
-                              !recipientAddress ||
-                              !paymentAmount ||
-                              !paymentFrequency
-                            ) {
+                          onClick={async () => {
+                            if (!selectedEmployee) {
                               toast({
-                                title: "Missing Information",
-                                description:
-                                  "Please fill in all recipient fields",
+                                title: "Employee Required",
+                                description: "Please select an employee",
                                 variant: "destructive",
                               });
                               return;
                             }
 
-                            // Call the addRecipient function from useTokenStream
-                            addRecipient(
-                              form.getValues("token"),
-                              recipientAddress,
-                              paymentAmount,
-                              paymentFrequency
-                            )
-                              .then((result) => {
-                                if (result) {
-                                  toast({
-                                    title: "Recipient Added",
-                                    description: `Successfully added recipient to your treasury`,
-                                  });
+                            const selectedEmployeeData = employees.find(
+                              (emp) =>
+                                emp.aptosWalletAddress === selectedEmployee
+                            );
 
-                                  // Clear the form
-                                  (
-                                    document.getElementById(
-                                      "recipientAddress"
-                                    ) as HTMLInputElement
-                                  ).value = "";
-                                  (
-                                    document.getElementById(
-                                      "paymentAmount"
-                                    ) as HTMLInputElement
-                                  ).value = "";
-                                  (
-                                    document.getElementById(
-                                      "paymentFrequency"
-                                    ) as HTMLInputElement
-                                  ).value = "";
-                                }
-                              })
-                              .catch((error) => {
-                                console.error("Error adding recipient:", error);
-                                toast({
-                                  title: "Error",
-                                  description:
-                                    "Failed to add recipient. Please try again.",
-                                  variant: "destructive",
-                                });
+                            if (!selectedEmployeeData) {
+                              toast({
+                                title: "Error",
+                                description: "Could not find employee data",
+                                variant: "destructive",
                               });
+                              return;
+                            }
+
+                            const paymentAmount =
+                              selectedEmployeeData.salary.toString();
+
+                            const frequencyValue = parseInt(
+                              (
+                                document.getElementById(
+                                  "paymentFrequencyValue"
+                                ) as HTMLInputElement
+                              )?.value || "1"
+                            );
+
+                            const frequencyUnit = (
+                              document.getElementById(
+                                "paymentFrequencyUnit"
+                              ) as HTMLSelectElement
+                            )?.value;
+
+                            // Convert to seconds based on unit
+                            let paymentFrequencyInSeconds: string;
+                            switch (frequencyUnit) {
+                              case "day":
+                                paymentFrequencyInSeconds = (
+                                  frequencyValue * 86400
+                                ).toString();
+                                break;
+                              case "week":
+                                paymentFrequencyInSeconds = (
+                                  frequencyValue * 604800
+                                ).toString();
+                                break;
+                              case "month":
+                                // Approximate month as 30 days
+                                paymentFrequencyInSeconds = (
+                                  frequencyValue * 2592000
+                                ).toString();
+                                break;
+                              default:
+                                paymentFrequencyInSeconds = "86400"; // Default to daily
+                            }
+
+                            if (!paymentAmount || !frequencyValue) {
+                              toast({
+                                title: "Missing Information",
+                                description:
+                                  "Please fill in all payment fields",
+                                variant: "destructive",
+                              });
+                              return;
+                            }
+
+                            try {
+                              const result = await addRecipient(
+                                form.getValues("token"),
+                                selectedEmployee,
+                                paymentAmount,
+                                paymentFrequencyInSeconds
+                              );
+
+                              if (result) {
+                                toast({
+                                  title: "Employee Added",
+                                  description: `Successfully added ${selectedEmployeeData.name} to your treasury recipients`,
+                                });
+
+                                // Clear the form
+                                setSelectedEmployee("");
+                                (
+                                  document.getElementById(
+                                    "paymentFrequencyValue"
+                                  ) as HTMLInputElement
+                                ).value = "1";
+                                (
+                                  document.getElementById(
+                                    "paymentFrequencyUnit"
+                                  ) as HTMLSelectElement
+                                ).value = "day";
+                              }
+                            } catch (error) {
+                              console.error("Error adding recipient:", error);
+                              toast({
+                                title: "Error",
+                                description:
+                                  "Failed to add recipient. Please try again.",
+                                variant: "destructive",
+                              });
+                            }
                           }}
                         >
-                          Add Recipient
+                          Add Employee to Treasury
                         </Button>
                       </div>
                     </div>

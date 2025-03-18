@@ -293,12 +293,102 @@ export function useTokenStream() {
     [isConnected, walletAddress]
   );
 
+  // Get treasury recipients - using a different approach
+  const getTreasuryRecipients = useCallback(
+    async (token: string) => {
+      if (!isConnected || !walletAddress) {
+        console.log("Cannot get recipients: wallet not connected or no wallet address");
+        return { success: false, recipients: [], error: "Wallet not connected" };
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const coinType = getCoinType(token);
+        const aptosClient = new AptosClient(
+          process.env.NEXT_PUBLIC_APTOS_NODE_URL || 
+          "https://fullnode.testnet.aptoslabs.com/v1"
+        );
+        
+        console.log("Fetching treasury resource for address:", walletAddress);
+        console.log("Using coin type:", coinType);
+        console.log("Resource type:", `${MODULE_OWNER_ADDRESS}::${MODULE_NAME}::Treasury<${coinType}>`);
+        
+        // First we need to get the treasury resource to access the recipient_addresses
+        try {
+          const resource = await aptosClient.getAccountResource(
+            walletAddress,
+            `${MODULE_OWNER_ADDRESS}::${MODULE_NAME}::Treasury<${coinType}>`
+          );
+          
+          console.log("Treasury resource found:", resource ? "Yes" : "No");
+          
+          // Extract recipients from the resource data
+          if (resource && resource.data) {
+            console.log("Treasury resource data:", JSON.stringify(resource.data, null, 2));
+            
+            // The data structure might be different based on contract implementation
+            // Adapt this to match the actual structure
+            const data = resource.data as {
+              recipients?: Record<string, {
+                payment_amount: string;
+                payment_frequency: string;
+                last_payment_time: string;
+                status: string;
+              }>;
+              recipient_addresses?: string[];
+              [key: string]: unknown;
+            };
+            
+            const recipients = [];
+            
+            // Check if we have recipients in the right format
+            if (data.recipients && data.recipient_addresses) {
+              console.log("Found recipients in treasury resource:", data.recipient_addresses.length);
+              
+              for (const addr of data.recipient_addresses) {
+                if (data.recipients[addr]) {
+                  recipients.push({
+                    address: addr,
+                    paymentAmount: data.recipients[addr].payment_amount,
+                    paymentFrequency: data.recipients[addr].payment_frequency,
+                    lastPaymentTime: data.recipients[addr].last_payment_time,
+                    status: data.recipients[addr].status
+                  });
+                }
+              }
+              
+              console.log("Processed recipients:", recipients.length);
+              return { success: true, recipients, error: null };
+            } else {
+              console.log("Treasury data found but no recipients or recipient_addresses field");
+              console.log("Available fields in data:", Object.keys(data));
+              return { success: true, recipients: [], error: "No recipients found in treasury" };
+            }
+          }
+          
+          console.log("No treasury data found");
+          return { success: false, recipients: [], error: "No treasury data found" };
+        } catch (resourceErr) {
+          console.error('Error fetching treasury resource:', resourceErr);
+          setError(resourceErr instanceof Error ? resourceErr.message : 'Failed to get treasury recipients');
+          return { success: false, recipients: [], error: resourceErr instanceof Error ? resourceErr.message : 'Unknown error' };
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isConnected, walletAddress]
+  );
+
   return {
     createTreasury,
     fundTreasury,
     addRecipient,
     processAllPayments,
     getTreasuryBalance,
+    getTreasuryRecipients,
     isLoading,
     error,
   };

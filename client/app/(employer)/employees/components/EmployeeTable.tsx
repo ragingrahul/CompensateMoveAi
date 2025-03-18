@@ -30,7 +30,7 @@ export default function EmployeeTable() {
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "APT",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(salary);
