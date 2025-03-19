@@ -12,7 +12,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, LinkIcon, UnlinkIcon, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Loader2,
+  LinkIcon,
+  UnlinkIcon,
+  CheckCircle,
+  Edit,
+  Save,
+} from "lucide-react";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
@@ -21,34 +29,55 @@ export default function ProfilePage() {
   const [linkedWallet, setLinkedWallet] = useState<string | null>(null);
   const [isLinking, setIsLinking] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [organizationName, setOrganizationName] = useState<string>("");
+  const [isEditingOrg, setIsEditingOrg] = useState(false);
+  const [isSavingOrg, setIsSavingOrg] = useState(false);
   const supabase = createClient();
 
-  // Fetch the user's linked wallet on component mount
+  // Fetch the user's linked wallet and organization name on component mount
   useEffect(() => {
-    async function fetchLinkedWallet() {
+    async function fetchUserData() {
       if (!user) return;
 
       try {
         setIsLoading(true);
-        const { data, error } = await supabase
+
+        // Fetch linked wallet
+        const walletResponse = await supabase
           .from("user_wallets")
           .select("wallet_address")
           .eq("user_id", user.id)
           .single();
 
-        if (error) {
-          console.error("Error fetching linked wallet:", error);
-        } else if (data) {
-          setLinkedWallet(data.wallet_address);
+        if (walletResponse.error && walletResponse.error.code !== "PGRST116") {
+          console.error("Error fetching linked wallet:", walletResponse.error);
+        } else if (walletResponse.data) {
+          setLinkedWallet(walletResponse.data.wallet_address);
+        }
+
+        // Fetch organization name
+        const profileResponse = await supabase
+          .from("user_profiles")
+          .select("organization_name")
+          .eq("user_id", user.id)
+          .single();
+
+        if (
+          profileResponse.error &&
+          profileResponse.error.code !== "PGRST116"
+        ) {
+          console.error("Error fetching profile:", profileResponse.error);
+        } else if (profileResponse.data) {
+          setOrganizationName(profileResponse.data.organization_name || "");
         }
       } catch (error) {
-        console.error("Failed to fetch linked wallet:", error);
+        console.error("Failed to fetch user data:", error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchLinkedWallet();
+    fetchUserData();
   }, [user, supabase]);
 
   // Link the connected wallet to the user's account
@@ -122,6 +151,39 @@ export default function ProfilePage() {
     }
   };
 
+  // Save organization name
+  const saveOrganizationName = async () => {
+    if (!user) return;
+
+    try {
+      setIsSavingOrg(true);
+
+      // Upsert operation to either update existing or insert new record
+      const { error } = await supabase.from("user_profiles").upsert(
+        {
+          user_id: user.id,
+          organization_name: organizationName,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "user_id", // This assumes user_id is the primary key or has a unique constraint
+        }
+      );
+
+      if (error) {
+        throw error;
+      }
+
+      setIsEditingOrg(false);
+      toast.success("Organization name saved successfully");
+    } catch (error) {
+      console.error("Error saving organization name:", error);
+      toast.error("Failed to save organization name. Please try again.");
+    } finally {
+      setIsSavingOrg(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -148,6 +210,51 @@ export default function ProfilePage() {
                 Email
               </h3>
               <p>{user.email}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                Organization Name
+              </h3>
+              {isEditingOrg ? (
+                <div className="flex items-center gap-2 mt-1">
+                  <Input
+                    value={organizationName}
+                    onChange={(e) => setOrganizationName(e.target.value)}
+                    placeholder="Enter organization name"
+                    className="flex-1"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={saveOrganizationName}
+                    disabled={isSavingOrg}
+                  >
+                    {isSavingOrg ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsEditingOrg(false)}
+                    disabled={isSavingOrg}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <p>{organizationName || "Not set"}</p>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsEditingOrg(true)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
             <div>
               <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
