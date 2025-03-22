@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { Check, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const FEATURES = [
   "Immutable, verifiable on-chain records",
@@ -103,17 +104,21 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-wrap gap-4 pt-2">
-              <Button
-                name="Employee portal"
-                icon={ArrowRight}
-                iconPosition="right"
-                className="shadow-lg shadow-purple-200/50 hover:shadow-purple-300/50 transition-all duration-300 hover:scale-105"
-              />
-              <Button
-                name="Employer portal"
-                variant="outline"
-                className="transition-all duration-300 hover:scale-105"
-              />
+              <Link href="/login">
+                <Button
+                  name="Employee portal"
+                  icon={ArrowRight}
+                  iconPosition="right"
+                  className="shadow-lg shadow-purple-200/50 hover:shadow-purple-300/50 transition-all duration-300 hover:scale-105"
+                />
+              </Link>
+              <Link href="/login">
+                <Button
+                  name="Employer portal"
+                  variant="outline"
+                  className="transition-all duration-300 hover:scale-105"
+                />
+              </Link>
             </div>
 
             <div className="pt-8">

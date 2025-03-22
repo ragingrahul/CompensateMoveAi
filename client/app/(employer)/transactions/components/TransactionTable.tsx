@@ -43,7 +43,7 @@ const transactions = [
     date: "2024-07-10T10:23:15",
     network: "Aptos Testnet",
     gas: "0.00015 APT",
-    gasPrice: "5 Gwei",
+    gasPrice: "5",
     confirmations: 124,
     explorer:
       "https://explorer.aptoslabs.com/txn/0x8f5a2d3e77b84c5edf98b8bc78f51b880d3e7cf9a71465b2b6b3c437892e8f5d",
@@ -61,7 +61,7 @@ const transactions = [
     date: "2024-07-08T15:45:22",
     network: "Aptos Testnet",
     gas: "0.00012 APT",
-    gasPrice: "4 Gwei",
+    gasPrice: "4",
     confirmations: 245,
     explorer:
       "https://explorer.aptoslabs.com/txn/0x7e9d2f1c8a7b6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d",
@@ -79,7 +79,7 @@ const transactions = [
     date: "2024-07-05T09:12:45",
     network: "Aptos Testnet",
     gas: "0.00011 APT",
-    gasPrice: "3 Gwei",
+    gasPrice: "3",
     confirmations: 2,
     explorer:
       "https://explorer.aptoslabs.com/txn/0x2b4c6e8a0d2f4e6a8c0e2d4f6a8e0c2d4f6e8a0c2d4f6e8a0c2d4f6e8a0c2d4f",
@@ -97,7 +97,7 @@ const transactions = [
     date: "2024-07-02T16:38:02",
     network: "Aptos Testnet",
     gas: "0.00009 APT",
-    gasPrice: "3 Gwei",
+    gasPrice: "3",
     confirmations: 567,
     explorer:
       "https://explorer.aptoslabs.com/txn/0x4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f",
@@ -115,7 +115,7 @@ const transactions = [
     date: "2024-06-28T11:24:35",
     network: "Aptos Testnet",
     gas: "0.00014 APT",
-    gasPrice: "4 Gwei",
+    gasPrice: "4",
     confirmations: 0,
     explorer:
       "https://explorer.aptoslabs.com/txn/0x9c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e4d6f8a0c2e",
@@ -133,7 +133,7 @@ const transactions = [
     date: "2024-06-25T08:22:45",
     network: "Aptos Testnet",
     gas: "0.00008 APT",
-    gasPrice: "2 Gwei",
+    gasPrice: "2",
     confirmations: 1024,
     explorer:
       "https://explorer.aptoslabs.com/txn/0xa1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
@@ -313,8 +313,7 @@ const TransactionTable = () => {
                     {tx.amount} {tx.currency}
                   </div>
                   <div className="text-xs text-purple-bg-dark3 flex items-center gap-1">
-                    <Banknote className="h-3 w-3" /> Gas: {tx.gas} (
-                    {tx.gasPrice})
+                    <Banknote className="h-3 w-3" /> Gas: {tx.gas}
                   </div>
                 </td>
 

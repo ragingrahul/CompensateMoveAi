@@ -81,10 +81,12 @@ const Navbar = () => {
               </Link>
             ))}
           </div>
-          <Button
-            name="Connect now"
-            className="ml-2 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
-          />
+          <Link href="/login">
+            <Button
+              name="Connect now"
+              className="ml-2 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
+            />
+          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -122,7 +124,9 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="mt-4">
-              <Button name="Connect now" />
+              <Link href="/login">
+                <Button name="Connect now" />
+              </Link>
             </div>
           </div>
         )}

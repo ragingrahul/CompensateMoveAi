@@ -120,7 +120,7 @@ export function CtaSection() {
                 className="flex flex-col sm:flex-row gap-4 justify-center"
               >
                 <Link
-                  href="#"
+                  href="/login"
                   className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 font-medium px-8 py-4 rounded-lg hover:bg-white/90  shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   Get started for free
