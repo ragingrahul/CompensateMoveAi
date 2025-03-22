@@ -25,6 +25,7 @@ const pathMap: Record<string, string> = {
   employees: "Employees",
   transactions: "Transactions",
   payslip: "Payslips",
+  pools: "Treasury Yield Pools",
   help: "Help & Center",
 };
 

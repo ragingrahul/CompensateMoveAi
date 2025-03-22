@@ -955,7 +955,7 @@ export const TreasuryForm = forwardRef<TreasuryFormRef, TreasuryFormProps>(
                                   (emp) =>
                                     emp.aptosWalletAddress === selectedEmployee
                                 )?.salary || "-"
-                              : "Will display employee&apos;s salary"}
+                              : "Will display employee's salary"}
                           </div>
                         </div>
                         <p className="text-xs text-purple-bg-dark3">

@@ -23,6 +23,7 @@ import {
   ArrowLeftRight,
   ChevronRight,
   MessageCircle,
+  BarChart3,
 } from "lucide-react";
 import { UserProfileButton } from "./user/UserProfileButton";
 
@@ -55,6 +56,12 @@ const navItems = [
         url: "/payslip",
         icon: FileText,
         path: "payslip",
+      },
+      {
+        title: "Pools",
+        url: "/pools",
+        icon: BarChart3,
+        path: "pools",
       },
       {
         title: "Move Agent Chat",

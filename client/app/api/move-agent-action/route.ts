@@ -61,6 +61,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const messages = body.messages ?? [];
     const message = body.message; // Support for single message format
+    console.log("message", message);
     const showIntermediateSteps = body.show_intermediate_steps ?? false;
 
     // Format messages properly for the agent
@@ -96,7 +97,8 @@ export async function POST(request: Request) {
         The response also contains token/token[] which contains the name and address of the token and the decimals.
         WHEN YOU RETURN ANY TOKEN AMOUNTS, RETURN THEM ACCORDING TO THE DECIMALS OF THE TOKEN.
 
-        The user might also provide a protocol or project name. If they do, you should use the YieldMaxTool to get the yield details for the protocol.
+        The user might also provide a protocol or project name like "Amnis, Aries, Thala, Cellana". I would request you since you are an defi expert, to go through the
+        user prompt and extract the protocol or project name. If they do, you should use the YieldMaxTool to get the yield details for the protocol. (IMPORTANT)
             
         The input json should be string (IMPORTANT)
       `,

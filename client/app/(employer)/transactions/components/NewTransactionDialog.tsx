@@ -57,22 +57,10 @@ import {
 import { cn } from "@/lib/utils";
 
 // Token options
-const tokens = [
-  { label: "USDC", value: "usdc" },
-  { label: "ETH", value: "eth" },
-  { label: "USDT", value: "usdt" },
-  { label: "DAI", value: "dai" },
-  { label: "BTC", value: "btc" },
-] as const;
+const tokens = [{ label: "APT", value: "apt" }] as const;
 
 // Network options
-const networks = [
-  { label: "Ethereum", value: "ethereum" },
-  { label: "Polygon", value: "polygon" },
-  { label: "Optimism", value: "optimism" },
-  { label: "Arbitrum", value: "arbitrum" },
-  { label: "Base", value: "base" },
-] as const;
+const networks = [{ label: "Aptos Testnet", value: "aptos_testnet" }] as const;
 
 // Transaction types
 const transactionTypes = [
