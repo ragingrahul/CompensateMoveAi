@@ -1,4 +1,6 @@
-import { AuthContainer } from "./components/auth-container"
+import { AuthContainer } from "./components/auth-container";
+
+export const dynamic = "force-dynamic";
 
 export default function LoginPage() {
   return (
@@ -7,5 +9,5 @@ export default function LoginPage() {
         <AuthContainer />
       </div>
     </div>
-  )
+  );
 }
