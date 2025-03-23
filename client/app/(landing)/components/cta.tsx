@@ -98,7 +98,7 @@ export function CtaSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                Transform How You Handle Global Payroll
+                Where Employer Funds Never Sleep, And Everyone Profits
               </motion.h2>
 
               <motion.p
@@ -108,8 +108,10 @@ export function CtaSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                Join thousands of companies using Compensate to streamline their
-                global payroll operations with blockchain technology.
+                Join innovative companies using Compensate to ensure their
+                treasury funds generate yield while awaiting employee claims.
+                Powered by AI-driven allocation to optimal yield-generating
+                protocols.
               </motion.p>
 
               <motion.div

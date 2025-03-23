@@ -7,9 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const FEATURES = [
-  "Immutable, verifiable on-chain records",
-  "Swift global, low-fee transfers",
-  "Empower employees with data control",
+  "AI-Powered Treasury Management",
+  "Continuous Yield Generation",
+  "Smart Streaming Payments",
 ];
 
 const TRUSTED_LOGOS = [
@@ -74,12 +74,11 @@ const Hero = () => {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-800 via-indigo-700 to-purple-900">
-              Simplify Global Payroll Operations
+              Intelligent Blockchain Payroll with Yield-Generating Treasury
             </h1>
 
             <p className="text-lg md:text-xl text-gray-600 max-w-xl">
-              Fast, secure, and borderless payroll solutions for modern teams
-              with blockchain-powered security and transparency.
+              Our AI agent automatically allocates treasury funds to optimal yield-generating protocols, ensuring your funds work for you 24/7 until claimed.
             </p>
 
             <div className="space-y-4">
@@ -178,14 +177,14 @@ const Hero = () => {
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                 <Check className="w-5 h-5 text-green-600" />
               </div>
-              <span className="text-sm font-medium">Secure Payments</span>
+              <span className="text-sm font-medium">Yield Generation</span>
             </div>
 
             <div className="absolute top-10 -right-4 md:-right-8 p-3 bg-white rounded-lg shadow-xl flex items-center gap-2 transform -rotate-2 hover:rotate-0 transition-all duration-300">
               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                 <Check className="w-5 h-5 text-blue-600" />
               </div>
-              <span className="text-sm font-medium">Real-time Tracking</span>
+              <span className="text-sm font-medium">AI Optimization</span>
             </div>
           </div>
         </div>

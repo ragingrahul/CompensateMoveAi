@@ -77,7 +77,7 @@ export function FeaturesSection() {
               maxWidth: "100%",
             }}
           >
-            Streamline into the <br /> Global Payroll Operations
+            AI-Powered Treasury <br /> That Works For You
           </motion.h2>
           <motion.p
             className="text-xl text-gray-600 max-w-3xl mx-auto"
@@ -85,8 +85,8 @@ export function FeaturesSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Manage your entire payroll process from a single dashboard, designed
-            for modern businesses operating globally.
+            Your funds don&apos;t sit idle - our AI agent automatically
+            allocates treasury funds to optimal yield-generating protocols.
           </motion.p>
         </motion.div>
 
@@ -94,16 +94,16 @@ export function FeaturesSection() {
           <div className="relative h-full bg-purple-img-dark min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="absolute top-4 right-4 z-20">
               <div className="px-3 py-1.5 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
-                Blockchain Powered
+                AI-Powered
               </div>
             </div>
             <div className="w-full h-full relative">
               <h2 className="absolute top-4 left-4 max-w-56 text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-black z-10">
-                Smart Contract Automation
+                Intelligent Treasury Management
               </h2>
               <p className="absolute bottom-4 left-4 mt-4 text-left text-base/6 text-white z-10">
-                Automate payroll transactions with blockchain smart contracts
-                for unmatched security and transparency.
+                Our AI analyzes risk-reward profiles across hundreds of DeFi
+                protocols to maximize yield.
               </p>
             </div>
             <Lottie
@@ -116,16 +116,16 @@ export function FeaturesSection() {
           <div className="relative h-full bg-img-light min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="absolute top-4 right-4 z-20">
               <div className="px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                Real-time Data
+                Real-time Analytics
               </div>
             </div>
             <div className="w-full h-full relative">
               <h2 className="absolute max-w-56 top-4 left-4 text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-black z-10">
-                Comprehensive Payroll Analytics
+                Real-Time Yield Analytics
               </h2>
               <p className="absolute bottom-4 left-4 mt-4 text-left text-base/6 text-black z-10">
-                Harness deep insights with real-time metrics for data-driven
-                payroll decisions.
+                Track and analyze your treasury&apos;s performance with detailed
+                dashboards.
               </p>
             </div>
             <Image
@@ -192,15 +192,14 @@ export function FeaturesSection() {
             {/* Main container with text */}
             <div className="absolute top-0 left-0 right-0 z-30 p-4">
               <h2 className="max-w-sm md:max-w-lg text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-black">
-                Harness deep insights with real-time metrics for data-driven
-                payroll decisions.
+                Continuous Optimization Across Multiple Blockchain Networks
               </h2>
             </div>
 
             <div className="absolute bottom-0 left-0 right-0 z-30 p-4">
               <p className="max-w-[26rem] text-left text-base/6 font-medium text-black">
-                Effortlessly process international salary payments with
-                blockchain&apos;s speed and security.
+                The AI continuously monitors and rebalances allocations as
+                market conditions change across multiple blockchain networks.
               </p>
             </div>
 
@@ -233,16 +232,16 @@ export function FeaturesSection() {
           <div className="relative h-full bg-img-light min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="absolute top-4 right-4 z-20">
               <div className="px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
-                Enterprise Ready
+                Self-Service
               </div>
             </div>
             <div className="w-full h-full relative">
               <h2 className="absolute max-w-56 top-4 left-4 text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-black z-10">
-                Employer & Employee Management
+                Employee Self-Service
               </h2>
               <p className="absolute bottom-4 left-4 mt-4 text-left text-base/6 text-white z-10">
-                Empower employers and employees through secure, integrated
-                management solutions.
+                Simple interface for employees to view and claim their
+                compensation with real-time yield data.
               </p>
             </div>
             <Image
