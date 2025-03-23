@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { LoginForm } from "./login-form";
 import { SignupForm } from "./signup-form";
 import { useAuth } from "@/lib/auth-context";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface AuthContainerProps extends React.ComponentProps<"div"> {
   className?: string;
@@ -17,11 +17,20 @@ export function AuthContainer({ className, ...props }: AuthContainerProps) {
   console.log("Rendering AuthContainer component");
   const [mode, setMode] = useState<"login" | "signup">("login");
   const searchParams = useSearchParams();
+  const router = useRouter();
   const error = searchParams?.get("error");
   const signup = searchParams?.get("signup");
   const emailVerified = searchParams?.get("email-verification");
-  const { signInWithProvider } = useAuth();
+  const { signInWithProvider, user } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
+
+  // Check if user is already authenticated on component mount
+  useEffect(() => {
+    if (user) {
+      console.log("User already authenticated, redirecting to dashboard");
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   const toggleMode = useCallback(() => {
     console.log(

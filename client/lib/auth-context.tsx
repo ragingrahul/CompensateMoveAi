@@ -81,14 +81,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(newSession?.user ?? null);
       setIsLoading(false);
 
-      // Redirect to dashboard if user is authenticated and on login page
-      if (newSession?.user && window.location.pathname === "/login") {
-        console.log(
-          "User authenticated on login page, redirecting to dashboard"
-        );
-        router.push("/dashboard");
-        router.refresh();
-      }
+      // Add a small delay to ensure the pathname is updated after client-side navigation
+      setTimeout(() => {
+        // Redirect to dashboard if user is authenticated and on login page
+        if (newSession?.user && window.location.pathname === "/login") {
+          console.log(
+            "User authenticated on login page, redirecting to dashboard"
+          );
+          router.push("/dashboard");
+          router.refresh();
+        }
+      }, 100); // Small timeout to allow pathname update
     });
 
     setData();
