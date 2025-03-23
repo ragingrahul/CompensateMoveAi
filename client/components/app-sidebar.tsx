@@ -18,8 +18,6 @@ import {
 import {
   LayoutDashboard,
   Users,
-  FileText,
-  HelpCircle,
   ArrowLeftRight,
   ChevronRight,
   MessageCircle,
@@ -52,12 +50,6 @@ const navItems = [
         path: "transactions",
       },
       {
-        title: "Payslips",
-        url: "/payslip",
-        icon: FileText,
-        path: "payslip",
-      },
-      {
         title: "Pools",
         url: "/pools",
         icon: BarChart3,
@@ -68,12 +60,6 @@ const navItems = [
         url: "/move-agent-chat",
         icon: MessageCircle,
         path: "move-agent-chat",
-      },
-      {
-        title: "Help & Center",
-        url: "/help",
-        icon: HelpCircle,
-        path: "help",
       },
     ],
   },
